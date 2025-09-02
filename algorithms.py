@@ -5,7 +5,6 @@ from scipy.linalg import cholesky, eigh, solve_triangular
 from typing import Tuple
 from numba import jit, prange, float64, int32
 
-# ========= Basic helpers (robust enough, minimal code) =========
 import numpy as np
 
 
@@ -776,3 +775,4 @@ def estimate_embedding_logmhat_aca(
     if L.shape[1] == 0:
         return np.zeros((n, d_embed))
     return embedding_from_lowrank(L, R, d_embed=d_embed)
+
