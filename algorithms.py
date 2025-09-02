@@ -243,26 +243,22 @@ def node_update(U0, ML_diag, MR, delta_rows_idx, delta_rows_val,
 
     U_rows = _compose_rows(U0, ML_diag, MR, delta_rows_idx, delta_rows_val, Ind)
 
-    # G = I - Σ g_i u_i u_i^T, where g_i = bi / (di + bi)
     gi = bi / np.maximum(Di_tilde, 1e-12)
     G = np.eye(k)
     for j in range(Ind.size):
         uj = U_rows[j, :]
         G -= gi[j] * np.outer(uj, uj)
 
-    # c = Σ (Wi * bhat_i) u_i
     coeff = Wi * bhat_i
     c = (coeff[:, None] * U_rows).sum(axis=0)  # (k,)
-
     R = _chol_psd(G)
     z = solve_triangular(R.T, c, lower=True, check_finite=False)
-    # alpha^2 = ||b̂||^2 - ||z||^2
+
     bhat_norm2 = float(np.sum((bi * bi) / np.maximum(Di_tilde, 1e-12)) / denom_b)
     alpha2 = max(bhat_norm2 - float(z @ z), 0.0)
     alpha = np.sqrt(alpha2)
     den_alpha = max(alpha, 1e-8)
 
-    # Core (k+2)×(k+2)
     RLRT = R @ np.diag(Lambda) @ R.T
     Ctil = np.zeros((k + 2, k + 2))
     Ctil[:k, :k] = RLRT
@@ -274,13 +270,11 @@ def node_update(U0, ML_diag, MR, delta_rows_idx, delta_rows_val,
     UC, gamma = _topk_eig_sym(Ctil, k)
     Lambda_next = gamma
 
-    # MR_t = R^{-1} UC[:k,:] - (R^{-1} z) * q^T / alpha
     MR_left = solve_triangular(R, UC[:k, :], lower=False, check_finite=False)
     y = solve_triangular(R, z, lower=False, check_finite=False)
     q = UC[k, :]
     MR_t = MR_left - y[:, None] * (q[None, :] / den_alpha)
 
-    # ΔM_t: affected old rows + new node row (index n)
     vec = q / den_alpha
     delta_rows_idx_t = []
     delta_rows_val_t = []
@@ -321,34 +315,31 @@ def edge_update(U0, ML_diag, MR, delta_rows_idx, delta_rows_val,
 
     U_rows = _compose_rows(U0, ML_diag, MR, delta_rows_idx, delta_rows_val, Ind)
 
-    # G = I - Σ g_i u_i u_i^T, where g_i = Δd_i / (d_i + Δd_i)
     gi = delta_d_full[Ind] / np.maximum(Di1, 1e-12)
     G = np.eye(k)
     for j in range(Ind.size):
         uj = U_rows[j, :]
         G -= gi[j] * np.outer(uj, uj)
 
-    # c = [Σ W_i x̃_i u_i, Σ W_i ỹ_i u_i], T = [[Σ x̃^2, Σ x̃ỹ],[., Σ ỹ^2]]
     c1 = (Wi * x_tilde)[:, None] * U_rows
     c2 = (Wi * y_tilde)[:, None] * U_rows
-    c = np.stack([c1.sum(axis=0), c2.sum(axis=0)], axis=1)  # (k,2)
+    c = np.stack([c1.sum(axis=0), c2.sum(axis=0)], axis=1) 
     T11 = float(np.dot(x_tilde, x_tilde))
     T22 = float(np.dot(y_tilde, y_tilde))
     T12 = float(np.dot(x_tilde, y_tilde))
     T = np.array([[T11, T12], [T12, T22]])
 
     R = _chol_psd(G)
-    z = solve_triangular(R.T, c, lower=True, check_finite=False)  # (k,2)
+    z = solve_triangular(R.T, c, lower=True, check_finite=False) 
     H = T - z.T @ z  # 2×2
 
-    # 2×2 PSD factor RX from eigen-decomp
     wH, VH = eigh(0.5 * (H + H.T), check_finite=False)
-    RX = (np.sqrt(np.clip(wH, 0.0, None))[None, :] * VH.T)  # 2×2
+    RX = (np.sqrt(np.clip(wH, 0.0, None))[None, :] * VH.T) 
 
     RLRT = R @ np.diag(Lambda) @ R.T
     Ctil = np.zeros((k + 2, k + 2))
     Ctil[:k, :k] = RLRT
-    Ubar = np.vstack([c, RX])  # (k+2, 2)
+    Ubar = np.vstack([c, RX])  
     S2 = np.array([[0.0, 1.0], [1.0, 0.0]])
     Ctil += Ubar @ S2 @ Ubar.T
 
@@ -356,14 +347,13 @@ def edge_update(U0, ML_diag, MR, delta_rows_idx, delta_rows_val,
     Lambda_next = gamma
 
     MR_left = solve_triangular(R, UC[:k, :], lower=False, check_finite=False)
-    tail = UC[k:k + 2, :]  # 2×k
-    RX_pinv = np.linalg.pinv(RX)  # 2×2
-    Y = RX_pinv @ tail  # 2×k
+    tail = UC[k:k + 2, :]  
+    RX_pinv = np.linalg.pinv(RX)  
+    Y = RX_pinv @ tail  
     correction = solve_triangular(R, z, lower=False, check_finite=False)  # k×2
     MR_t = MR_left - correction @ Y
 
-    # ΔM_t (only rows in Ind are non-zero)
-    coeff = (np.stack([x_tilde, y_tilde], axis=1) @ Y)  # (m,k)
+    coeff = (np.stack([x_tilde, y_tilde], axis=1) @ Y)  
     delta_rows_idx_t = Ind.copy()
     delta_rows_val_t = coeff
 
@@ -588,7 +578,6 @@ def estimate_embedding_logmhat(
         )
 
     if embed_mode == "aca":
-        # ACA on H using factorized oracles; returns embedding E ∈ R^{n×d_embed}
         return estimate_embedding_logmhat_aca(
             U0, ML_diag, MR, delta_rows_idx, delta_rows_val,
             Lambda, D, weights, vol, b_neg,
@@ -598,7 +587,6 @@ def estimate_embedding_logmhat(
     if embed_mode == "randomized_svd":
         n = int(D.shape[0])
         U = _build_U_current_full(U0, ML_diag, MR, delta_rows_idx, delta_rows_val, n)
-        # scikit-learn randomized_svd parameters per docs: n_iter, n_oversamples, random_state.
         return _randomized_svd_embedding(
             U, Lambda, D, weights, vol_over_b,
             d_embed=d_embed, tau_clip=tau_clip,
@@ -775,4 +763,5 @@ def estimate_embedding_logmhat_aca(
     if L.shape[1] == 0:
         return np.zeros((n, d_embed))
     return embedding_from_lowrank(L, R, d_embed=d_embed)
+
 
