@@ -11,7 +11,7 @@ Event = Union[Tuple[Literal["node"], np.ndarray], Tuple[Literal["edge"], np.ndar
 
 
 @dataclass
-class ANDMFModel:
+class ATNMFModel:
     """
     Attributes
     ----------
@@ -106,7 +106,7 @@ class ANDMFModel:
         embed_mode: EmbedMode = "randomized_svd",
         rng_seed: int = 0,
         use_normalized: bool = True,
-    ) -> "ANDMFModel":
+    ) -> "ATNMFModel":
 
         A0 = np.asarray(A0, dtype=float)
         A0 = 0.5 * (A0 + A0.T)
@@ -134,7 +134,7 @@ class ANDMFModel:
         b_neg: float,
         d_embed: int,
         **kwargs,
-    ) -> "ANDMFModel":
+    ) -> "ATNMFModel":
         return cls(U0=U0, Lambda=Lambda, D=D0, weights=weights, b_neg=b_neg,
                    d_embed=d_embed, **kwargs)
 
@@ -259,7 +259,7 @@ if __name__ == "__main__":
     weights = np.ones(T) / float(T)
     b_neg = 1.0
 
-    model = ANDMFModel.from_adjacency(A0, k=k, weights=weights, b_neg=b_neg, d_embed=k,
+    model = ATNMFModel.from_adjacency(A0, k=k, weights=weights, b_neg=b_neg, d_embed=k,
                                        tau_clip=1.0, embed_mode="randomized_svd")
 
     b = np.zeros(model.n); b[1] = 1.0; b[3] = 1.0
