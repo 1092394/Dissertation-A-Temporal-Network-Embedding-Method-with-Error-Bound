@@ -2,7 +2,8 @@
 This dissertation, supervised by Prof. Renaud Lambiotte, is submitted for the degree of MSc in Mathematical Modelling and Scientific Computing in the University of Oxford. This disseration proposed a new matrix-factorisation based embedding method for temporal (or dynamic) networks. The main results are 
 
 Theorem 6 (One Step Node Update of Normalised Adjacency Matrix)
-	Let $G_t$ be a symmetric network without isolated vertices at time $t$,
+
+Let $G_t$ be a symmetric network without isolated vertices at time $t$,
 	$A_t\!\in\!\mathbb{R}^{n\times n}$ as its adjacency matrix and
 	$D_t=\diag(\sum_j A[i,j])$ as degree matrix. At time $t+1$, a new node is added with incident
 	vector $b\in\mathbb{R}^n$ having $m \ll n$ nonzeros, so that
