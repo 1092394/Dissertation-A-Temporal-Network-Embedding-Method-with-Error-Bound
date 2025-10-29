@@ -68,8 +68,6 @@ $$
 U_{t+1} = M^L_t\, U_t\, M^R_t + \Delta M_t.
 $$
 
----
-
 #### (ii) Error Bound
 
 The error between $S_{t+1}$ and $\widehat S^{(k)}_{t+1}$ is upper bounded by
@@ -77,8 +75,7 @@ The error between $S_{t+1}$ and $\widehat S^{(k)}_{t+1}$ is upper bounded by
 $$
 \|S_{t+1} - \widehat S^{(k)}_{t+1}\|_F
 \le
-\beta_{t,node}^2 \|S_t - \widehat S_t^{(k)}\|_F
-+ \sqrt{2}\, \|\hat b\|_2.
+\beta_{t,node}^2 \|S_t - \widehat S_t^{(k)}\|_F + \sqrt{2}\, \|\hat b\|_2.
 $$
 
 
