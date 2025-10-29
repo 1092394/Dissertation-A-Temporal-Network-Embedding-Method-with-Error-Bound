@@ -42,7 +42,7 @@ W := \tilde D_t^{-1/2} D_t^{1/2}, \qquad
 \hat b := d^{-1/2} \tilde D_t^{-1/2} b,
 $$
 
-and suppose $\hat b \notin span(W U_t)$ and $\|W\|_2 \le \beta_{t,node}$.
+and suppose $\hat b \notin span(W U_t)$ and $||W||_2 \le \beta_{t,node}$.
 
 Then, for  
 
@@ -73,9 +73,9 @@ $$
 The error between $S_{t+1}$ and $\widehat S^{(k)}_{t+1}$ is upper bounded by
 
 $$
-\|S_{t+1} - \widehat S^{(k)}_{t+1}\|_F
+||S_{t+1} - \widehat S^{(k)}_{t+1}||_F
 \le
-\beta_{t,node}^2 \|S_t - \widehat S_t^{(k)}\|_F + \sqrt{2}\, \|\hat b\|_2.
+\beta_{t,node}^2 ||S_t - \widehat S_t^{(k)}||_F + \sqrt{2}\, ||\hat b||_2.
 $$
 
 
