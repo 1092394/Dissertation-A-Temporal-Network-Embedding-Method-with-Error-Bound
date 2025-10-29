@@ -7,7 +7,7 @@ This dissertation, supervised by Prof. Renaud Lambiotte, is submitted for the de
 4. **Theorem 9** (Mulit-Step Error)
 
 The flowchart of ATNMF is shown in Figure 5.1
-(/image/ATNMF_Fig.png "ATNMF")
+![](ATNMF_Fig.png "ATNMF")
 
 Specific algorithms are achieved by Algorithm 3, Algorithm 4, Algorithm 5. 
 
