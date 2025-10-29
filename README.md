@@ -1,5 +1,5 @@
 # A Temporal Network Embedding Method with Error Bound
-This dissertation, supervised by Prof. Renaud Lambiotte, is submitted for the degree of MSc in Mathematical Modelling and Scientific Computing in the University of Oxford. This disseration proposed a new matrix-factorisation based embedding method for temporal (or dynamic) networks. The main results are 
+This dissertation (in file DL_ATNMF_Corrected.pdf), supervised by Prof. Renaud Lambiotte, is submitted for the degree of MSc in Mathematical Modelling and Scientific Computing in the University of Oxford. This disseration proposed a new matrix-factorisation based embedding method for temporal (or dynamic) networks. The main results are 
 
 1. **Theorem 6** (One Step Node Update of Normalised Adjacency Matrix)
 2. **Theorem 7** (One Step Edge Update of Normalised Adjacency Matrix)
