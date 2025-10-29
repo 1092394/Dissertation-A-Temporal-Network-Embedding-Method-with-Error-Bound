@@ -1,81 +1,14 @@
 # A Temporal Network Embedding Method with Error Bound
 This dissertation, supervised by Prof. Renaud Lambiotte, is submitted for the degree of MSc in Mathematical Modelling and Scientific Computing in the University of Oxford. This disseration proposed a new matrix-factorisation based embedding method for temporal (or dynamic) networks. The main results are 
 
-### Theorem 6 (One Step Node Update of NAM)
+1. **Theorem 6** (One Step Node Update of Normalised Adjacency Matrix)
+2. **Theorem 7** (One Step Edge Update of Normalised Adjacency Matrix)
+3. **Theorem 8** (One Step Error)
+4. **Theorem 9** (Mulit-Step Error)
 
-Let $G_t$ be a symmetric network without isolated vertices at time $t$,  with adjacency matrix $A_t \in \mathbb{R}^{n\times n}$ and  degree matrix $D_t = \mathrm{diag}\!\left(\sum_j A[i,j]\right)$.
+The flowchart of ATNMF is shown in Figure 5.1
+(/image/ATNMF_Fig.png "ATNMF")
 
-At time $t+1$, a new node is added with incident vector  
-$b \in \mathbb{R}^n$ having $m \ll n$ nonzeros, so that
+Specific algorithms are achieved by Algorithm 3, Algorithm 4, Algorithm 5. 
 
-$$
-A_{t+1} =
-\begin{pmatrix}
-A_t & b \\
-b^\top & 0
-\end{pmatrix}.
-$$
-
-Define  
-
-$$
-S_t := D_t^{-1/2} A_t D_t^{-1/2},
-$$
-
-and let a $k$-term orthogonal diagonalisation approximation of $S_t$ be  
-
-$$
-\widehat{S}_t^{(k)} = U_t \Lambda_t^{(k)} U_t^\top,
-\qquad
-U_t \in \mathbb{R}^{n\times k},\;
-\Lambda_t^{(k)} \in \mathbb{R}^{k\times k},
-$$
-
-with $U_t^\top U_t = I_k$ and $\Lambda_t^{(k)}$ diagonal.
-
-Further let  
-
-$$
-\tilde D_t := D_t + diag(b), \qquad
-d = \mathbf{1}^\top b, \qquad
-W := \tilde D_t^{-1/2} D_t^{1/2}, \qquad
-\hat b := d^{-1/2} \tilde D_t^{-1/2} b,
-$$
-
-and suppose $\hat b \notin span(W U_t)$ and $||W||_2 \le \beta_{t,node}$.
-
-Then, for  
-
-$$
-S_{t+1} := D_{t+1}^{-1/2} A_{t+1} D_{t+1}^{-1/2},
-$$
-
-there exists a $k$-term orthogonal diagonalisation approximation  
-
-$$
-\widehat S^{(k)}_{t+1} = U_{t+1} \Lambda_{t+1}^{(k)} U_{t+1}^\top,
-$$
-
-and matrices $M^L_t$, $M^R_t$, $\Delta M_t$ such that:
-
----
-
-#### (i) Node Update Formula
-
-The orthogonal matrix $U_{t+1} \in \mathbb{R}^{(n+1)\times k}$ can be updated as
-
-$$
-U_{t+1} = M^L_t\, U_t\, M^R_t + \Delta M_t.
-$$
-
-#### (ii) Error Bound
-
-The error between $S_{t+1}$ and $\widehat S^{(k)}_{t+1}$ is upper bounded by
-
-$$
-||S_{t+1} - \widehat S^{(k)}_{t+1}||_F
-\le
-\beta_{t,node}^2 ||S_t - \widehat S_t^{(k)}||_F + \sqrt{2}\, ||\hat b||_2.
-$$
-
-
+The oline update time complexity can achieve $O(mk^2 + k^3 + |Ind_{\Delta M}|k^2)$, for $m, k \ll n$, the number of nodes, $|Ind_{\Delta M}|$ is the number of nonzero rows of row sparse matrix $\Delta M$.
